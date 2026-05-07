@@ -1,0 +1,108 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ─── CRITICAL: Force class-only dark mode (ignore OS prefers-color-scheme) ── */
+/* Without this, Tailwind v4 applies dark: styles via media query AND class,   */
+/* which causes dark styles to bleed into light mode on dark-OS systems.        */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── UOS Brand Token System ─────────────────────────────────────── */
+@theme {
+  /* Light Mode Palette */
+  --color-uos-bg:          #F8FAFC;
+  --color-uos-surface:     #FFFFFF;
+  --color-uos-text:        #0F172A;
+  --color-uos-muted:       #64748B;
+  --color-uos-navy:        #0D1B54;
+  --color-uos-gold:        #F4BA19;
+
+  /* Dark Mode Palette */
+  --color-uos-dark-bg:     #0B1121;
+  --color-uos-dark-surface:#1E293B;
+  --color-uos-dark-text:   #F1F5F9;
+  --color-uos-dark-muted:  #94A3B8;
+  --color-uos-dark-border: #334155;
+
+  /* Ambient Glow Colors */
+  --color-glow-navy:       #1E40AF;
+  --color-glow-gold:       #B45309;
+
+  /* Font */
+  --font-sans: 'Inter', 'system-ui', sans-serif;
+}
+
+/* ─── Base Reset ─────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    height: 100%;
+    width: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Light mode base */
+    background-color: var(--color-uos-bg);
+    color: var(--color-uos-text);
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  body.dark {
+    background-color: var(--color-uos-dark-bg);
+    color: var(--color-uos-dark-text);
+  }
+
+  #root {
+    height: 100%;
+    width: 100%;
+  }
+
+  /* Spin animation for loader */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .animate-spin { animation: spin 1s linear infinite; }
+}
+
+/* ─── Scrollbars ─────────────────────────────────────────────────── */
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+@utility custom-scrollbar {
+  &::-webkit-scrollbar { width: 5px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(100, 116, 139, 0.25);
+    &:hover { background: rgba(100, 116, 139, 0.45); }
+  }
+}
+
+/* ─── Ambient Background Glow ────────────────────────────────────── */
+@utility bg-ambient-light {
+  background:
+    radial-gradient(ellipse 70% 60% at 30% 40%, rgba(13, 27, 84, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 80% 60%, rgba(244, 186, 25, 0.05) 0%, transparent 70%),
+    #F8FAFC;
+}
+
+@utility bg-ambient-dark {
+  background:
+    radial-gradient(ellipse 70% 60% at 30% 40%, rgba(30, 64, 175, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 85% 60%, rgba(180, 83, 9,  0.12) 0%, transparent 70%),
+    #0B1121;
+}
