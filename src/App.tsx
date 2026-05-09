@@ -183,11 +183,11 @@ export default function App() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`w-full max-w-md p-8 rounded-3xl shadow-2xl border ${dark ? 'bg-[#1E293B] border-slate-700' : 'bg-white border-slate-200'}`}
+          className={`w-[92%] max-w-md p-6 sm:p-8 rounded-3xl shadow-2xl border ${dark ? 'bg-[#1E293B] border-slate-700' : 'bg-white border-slate-200'}`}
         >
           <div className="flex justify-center mb-8">
             <div className={`p-4 rounded-2xl ${dark ? 'bg-white' : 'bg-slate-50'}`}>
-              <img src={uosLogo} alt="University of Sahiwal" className="h-20 object-contain" />
+              <img src={uosLogo} alt="University of Sahiwal" className="h-16 sm:h-20 object-contain" />
             </div>
           </div>
           
@@ -295,15 +295,23 @@ export default function App() {
       {/* ════════════════════════════════════════════════════════════
           SIDEBAR — Deep Navy in light, darker in dark
       ════════════════════════════════════════════════════════════ */}
-      <aside className={`
-        ${sidebarOpen ? 'w-[272px]' : 'w-0'}
-        transition-all duration-300 ease-in-out shrink-0 overflow-hidden z-[70]
-        ${dark
-          ? 'bg-[#0f172a] border-r border-[#1e293b]'
-          : 'bg-[#0D1B54] border-r border-[#1a2a6e]'
-        }
-        shadow-2xl
-      `}>
+      {/* Sidebar - Drawer on mobile, Sidebar on desktop */}
+      <motion.aside
+        initial={false}
+        animate={{ 
+          width: sidebarOpen ? 272 : 0,
+          x: (window.innerWidth < 768 && !sidebarOpen) ? -272 : 0 
+        }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        className={`
+          fixed md:relative h-full shrink-0 overflow-hidden z-[70]
+          ${dark
+            ? 'bg-[#0f172a] border-r border-[#1e293b]'
+            : 'bg-[#0D1B54] border-r border-[#1a2a6e]'
+          }
+          shadow-2xl
+        `}
+      >
         <div className="p-5 flex flex-col h-full w-[272px]">
 
           {/* ── Logo on white card ── */}
@@ -318,7 +326,8 @@ export default function App() {
           </div>
 
           {/* ── New Chat ── */}
-          <button
+          <motion.button
+            whileTap={{ scale: 0.96 }}
             onClick={() => { setMessages([]); setSidebarOpen(false); }}
             className="flex items-center gap-3 w-full p-3.5 rounded-xl mb-7 group transition-all
               bg-[#F4BA19] hover:bg-[#e6ac10] active:scale-95 shadow-lg shadow-[#F4BA19]/20"
@@ -327,7 +336,7 @@ export default function App() {
               <Plus size={17} className="text-[#0D1B54]" />
             </div>
             <span className="font-black text-sm text-[#0D1B54] tracking-tight">New Chat</span>
-          </button>
+          </motion.button>
 
           {/* ── Scrollable body ── */}
           <div className="flex-1 overflow-y-auto no-scrollbar space-y-7">
@@ -406,7 +415,7 @@ export default function App() {
             </p>
           </div>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* ════════════════════════════════════════════════════════════
           MAIN CONTENT
@@ -414,10 +423,10 @@ export default function App() {
       <div className="flex-1 flex flex-col h-full min-w-0">
 
         {/* ── Header ── */}
-        <header className={`h-16 shrink-0 flex items-center justify-between px-6 z-50 border-b transition-colors
+        <header className={`h-16 shrink-0 flex items-center justify-between px-4 sm:px-6 z-50 border-b transition-all duration-500
           ${dark
-            ? 'bg-[#0f172a]/80 backdrop-blur-md border-[#1e293b]'
-            : 'bg-white border-slate-200 shadow-sm'
+            ? 'bg-[#0f172a]/80 backdrop-blur-xl border-[#1e293b]'
+            : 'bg-white/80 backdrop-blur-xl border-slate-200 shadow-sm'
           }`}
         >
           {/* Left */}
@@ -428,7 +437,7 @@ export default function App() {
             >
               <Menu size={22} />
             </button>
-            <span className={`font-black text-sm uppercase tracking-tighter md:hidden ${dark ? 'text-[#F4BA19]' : 'text-[#0D1B54]'}`}>
+            <span className={`font-black text-xs sm:text-sm uppercase tracking-[0.2em] md:hidden ${dark ? 'text-[#F4BA19]' : 'text-[#0D1B54]'}`}>
               UOS AI
             </span>
           </div>
@@ -445,25 +454,27 @@ export default function App() {
             </button>
 
             {/* Profile pill */}
-            <div className={`flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-full border cursor-pointer transition-all shadow-sm
-              ${dark
-                ? 'bg-slate-800 border-slate-700 hover:border-[#F4BA19]/40'
-                : 'bg-slate-100 border-slate-200 hover:border-[#0D1B54]/30'
-              }`}
+            <motion.div 
+              whileTap={{ scale: 0.97 }}
+              className={`flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-full border cursor-pointer transition-all shadow-sm
+                ${dark
+                  ? 'bg-slate-800 border-slate-700 hover:border-[#F4BA19]/40'
+                  : 'bg-slate-100 border-slate-200 hover:border-[#0D1B54]/30'
+                }`}
             >
-              <div className="w-8 h-8 rounded-full bg-[#0D1B54] flex items-center justify-center text-[10px] font-black text-[#F4BA19]">
+              <div className="w-8 h-8 rounded-full bg-[#0D1B54] flex items-center justify-center text-[10px] font-black text-[#F4BA19] shrink-0">
                 {userInitials}
               </div>
-              <span className={`text-sm font-bold ${dark ? 'text-slate-200' : 'text-[#0D1B54]'} capitalize`}>{displayName}</span>
-              <button onClick={handleLogout} className="p-1 hover:bg-red-500/10 rounded-lg transition-colors group">
+              <span className={`text-sm font-bold ${dark ? 'text-slate-200' : 'text-[#0D1B54]'} capitalize truncate max-w-[80px] sm:max-w-none`}>{displayName}</span>
+              <button onClick={handleLogout} className="p-1 hover:bg-red-500/10 rounded-lg transition-colors group shrink-0">
                 <ChevronDown size={14} className={dark ? 'text-slate-500 group-hover:text-red-400' : 'text-[#0D1B54]/50 group-hover:text-red-500'} />
               </button>
-            </div>
+            </motion.div>
           </div>
         </header>
 
         {/* ── Chat / Landing ── */}
-        <main className="flex-1 overflow-y-auto px-6 py-8 custom-scrollbar">
+        <main className="flex-1 overflow-y-auto px-4 md:px-6 py-6 md:py-8 custom-scrollbar">
           <div className="max-w-4xl mx-auto flex flex-col min-h-full">
             <AnimatePresence mode="wait">
               {messages.length === 0 ? (
@@ -477,20 +488,35 @@ export default function App() {
                 >
                   {/* Greeting */}
                   <div className="space-y-3">
-                    <h1 className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${dark ? 'text-white' : 'text-[#0D1B54]'}`}>
+                    <h1 className={`text-3xl sm:text-4xl md:text-6xl font-black tracking-tighter leading-none ${dark ? 'text-white' : 'text-[#0D1B54]'}`}>
                       Hey,{' '}
                       <span style={{ color: GOLD }} className="capitalize">{displayName}</span>
                     </h1>
-                    <p className={`text-3xl md:text-4xl font-black tracking-tighter leading-none ${dark ? 'text-slate-600' : 'text-slate-400'}`}>
+                    <p className={`text-xl sm:text-2xl md:text-4xl font-black tracking-tighter leading-none ${dark ? 'text-slate-600' : 'text-slate-400'}`}>
                       What can I help with?
                     </p>
                   </div>
 
                   {/* Suggestion cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full">
+                  <motion.div 
+                    initial="hidden"
+                    animate="show"
+                    variants={{
+                      hidden: { opacity: 0 },
+                      show: {
+                        opacity: 1,
+                        transition: { staggerChildren: 0.12 }
+                      }
+                    }}
+                    className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full"
+                  >
                     {suggestions.map((c, i) => (
                       <motion.button
                         key={i}
+                        variants={{
+                          hidden: { opacity: 0, y: 20 },
+                          show: { opacity: 1, y: 0 }
+                        }}
                         whileHover={{
                           y: -6,
                           boxShadow: dark
@@ -521,7 +547,7 @@ export default function App() {
                         </p>
                       </motion.button>
                     ))}
-                  </div>
+                  </motion.div>
                 </motion.div>
               ) : (
                 /* Chat messages */
@@ -538,7 +564,7 @@ export default function App() {
                       animate={{ opacity: 1, y: 0 }}
                       className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
-                      <div className={`flex gap-3 max-w-[85%] ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div className={`flex gap-3 max-w-[92%] sm:max-w-[85%] ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                         {/* Avatar */}
                         <div className={`w-9 h-9 rounded-xl shrink-0 flex items-center justify-center shadow-md ${
                           msg.sender === 'user'
@@ -553,9 +579,9 @@ export default function App() {
                           }
                         </div>
                         {/* Bubble */}
-                        <div className={`p-4 rounded-2xl text-[15px] leading-relaxed shadow-md ${
+                        <div className={`p-4 rounded-2xl text-[15px] leading-relaxed shadow-lg ${
                           msg.sender === 'user'
-                            ? 'bg-[#0D1B54] text-white font-semibold'
+                            ? 'bg-gradient-to-br from-[#0D1B54] to-[#1e3a8a] text-white font-medium border border-white/10'
                             : dark
                               ? 'bg-[#1E293B] border border-slate-700 text-[#F1F5F9]'
                               : 'bg-white border border-slate-200 text-[#0F172A]'
@@ -597,7 +623,7 @@ export default function App() {
         </main>
 
         {/* ── Input bar ── */}
-        <div className="px-6 pb-6 pt-2 shrink-0">
+        <div className="px-4 md:px-6 pb-4 md:pb-6 pt-2 shrink-0">
           <div className="max-w-3xl mx-auto relative group">
             {/* Glow ring on focus */}
             <div className={`absolute -inset-0.5 rounded-[22px] blur opacity-0 group-focus-within:opacity-30 transition duration-500 pointer-events-none bg-gradient-to-r ${dark ? 'from-[#1E40AF] to-[#F4BA19]' : 'from-[#0D1B54] to-[#F4BA19]'}`} />
@@ -612,7 +638,7 @@ export default function App() {
               <div className={`flex items-center gap-2 px-4 py-2.5 border-b ${dark ? 'bg-slate-800/50 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
                 <Sparkles size={13} className="text-[#F4BA19]" />
                 <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${dark ? 'text-slate-400' : 'text-[#0D1B54]/60'}`}>
-                  University Intelligence · v1.2
+                  UOS Intelligence <span className="hidden sm:inline">· v1.2</span>
                 </span>
               </div>
 
