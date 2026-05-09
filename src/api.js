@@ -5,12 +5,12 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://ai-desk-backend.up.rail
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json',   
   },
 });
 
 /**
- * Send a message to the AI chatbot
+ * Send a message to the AI chatbot  c hdh
  * @param {string} message 
  * @returns {Promise<{response: string, query_type: string}>}
  */
