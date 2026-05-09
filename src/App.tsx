@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import uosLogo from './assets/imgi_3_logo - Copy.png';
-import axios from 'axios';
+import * as api from './api';
 import {
   Menu, Plus, MessageSquare, GraduationCap, Users, CreditCard,
   Clock, Sun, Moon, Sparkles, Paperclip, ChevronDown,
@@ -16,7 +16,7 @@ interface Message {
   type?: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// API configuration moved to api.js
 
 // ── UOS Brand tokens ──────────────────────────────────────────────
 const NAVY  = '#0D1B54';
@@ -67,17 +67,18 @@ export default function App() {
     setInput('');
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/chat`, { message: text });
+      const data = await api.chat(text);
       setMessages(p => [...p, {
         id: (Date.now() + 1).toString(),
-        text: res.data.response,
+        text: data.response,
         sender: 'assistant',
-        type: res.data.query_type,
+        type: data.query_type,
       }]);
-    } catch {
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.detail || "Couldn't reach the server. Please check the backend is running.";
       setMessages(p => [...p, {
         id: (Date.now() + 1).toString(),
-        text: "Couldn't reach the server. Please check the backend is running.",
+        text: errorMsg,
         sender: 'assistant',
       }]);
     } finally {
@@ -90,7 +91,7 @@ export default function App() {
     { name: 'Departments', icon: <Building2 size={15} />, url: 'https://www.uosahiwal.edu.pk/department' },
     { name: 'Faculty',    icon: <Users size={15} />, url: 'https://www.uosahiwal.edu.pk/depart-faculty/computer-science' },
     { name: 'Fees',       icon: <CreditCard size={15} />, url: 'https://www.uosahiwal.edu.pk/depart-fee/computer-science' },
-    { name: 'Timetable',  icon: <Clock size={15} />, url: `${API_URL}/api/timetable` },
+    { name: 'Timetable',  icon: <Clock size={15} />, url: api.getTimetableUrl() },
   ];
 
   const [chatHistory, setChatHistory] = useState<string[]>(() => {
@@ -136,12 +137,12 @@ export default function App() {
     setAuthError('');
     setLoading(true);
     try {
-      const endpoint = isSignUp ? '/api/auth/signup' : '/api/auth/login';
-      const payload = isSignUp ? { email, password, name } : { email, password };
-      const res = await axios.post(`${API_URL}${endpoint}`, payload);
+      const data = isSignUp 
+        ? await api.signup(email, password, name) 
+        : await api.login(email, password);
       
       setIsLoggedIn(true);
-      const returnedName = res.data.name || name || email.split('@')[0];
+      const returnedName = data.name || name || email.split('@')[0];
       setName(returnedName);
       
       localStorage.setItem('uos-auth', 'true');
