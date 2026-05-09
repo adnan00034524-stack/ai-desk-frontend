@@ -40,6 +40,13 @@ export default function App() {
   const [authError, setAuthError] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // Auto-close sidebar on mobile by default
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (dark) {
       document.documentElement.classList.add('dark');
@@ -423,21 +430,22 @@ export default function App() {
       <div className="flex-1 flex flex-col h-full min-w-0">
 
         {/* ── Header ── */}
-        <header className={`h-16 shrink-0 flex items-center justify-between px-4 sm:px-6 z-50 border-b transition-all duration-500
+        <header className={`h-16 shrink-0 flex items-center justify-between px-4 z-50 border-b transition-all duration-300
           ${dark
-            ? 'bg-[#0f172a]/80 backdrop-blur-xl border-[#1e293b]'
-            : 'bg-white/80 backdrop-blur-xl border-slate-200 shadow-sm'
+            ? 'bg-[#0f172a] border-[#1e293b]'
+            : 'bg-white border-slate-200 shadow-sm'
           }`}
         >
           {/* Left */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className={`p-2.5 rounded-xl transition-all ${dark ? 'text-slate-400 hover:bg-slate-800 hover:text-white' : 'text-[#0D1B54] hover:bg-[#0D1B54]/8'}`}
+              className={`p-2 rounded-xl transition-all active:scale-90 ${dark ? 'text-[#F4BA19] hover:bg-slate-800' : 'text-[#0D1B54] hover:bg-slate-100'}`}
+              aria-label="Toggle Sidebar"
             >
-              <Menu size={22} />
+              <Menu size={24} strokeWidth={2.5} />
             </button>
-            <span className={`font-black text-xs sm:text-sm uppercase tracking-[0.2em] md:hidden ${dark ? 'text-[#F4BA19]' : 'text-[#0D1B54]'}`}>
+            <span className={`font-black text-xs uppercase tracking-[0.2em] md:hidden ${dark ? 'text-[#F4BA19]' : 'text-[#0D1B54]'}`}>
               UOS AI
             </span>
           </div>
